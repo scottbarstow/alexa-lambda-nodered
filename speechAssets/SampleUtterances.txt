@@ -1,0 +1,2 @@
+GetPersonInfoIntent get info for {person}
+GetPersonInfoIntent about {person}

@@ -1,0 +1,17 @@
+{
+  "intents": [
+    {
+      "intent": "GetPersonInfoIntent",
+      "slots": [
+        {
+          "name": "person",
+          "type": "AMAZON.US_FIRST_NAME"
+        }
+      ]
+    },
+    {
+      "intent": "HelpIntent",
+      "slots": []
+    }
+  ]
+}
