@@ -176,3 +176,5 @@ The NodeRed flow returns a really simple JSON payload that looks something like 
 	"weight":"192 lbs"
 }
 ```
+
+That's pretty much it! If you have any questions or the code doesn't work for you for some reason, [hit me up on the Twitter](https://twitter.com/scottbarstow).
