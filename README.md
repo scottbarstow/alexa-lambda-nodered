@@ -1,11 +1,17 @@
 # alexa-lambda-nodered
 A simple [AWS Lambda](http://aws.amazon.com/lambda) function that demonstrates how to write a skill for the Amazon Echo using the Alexa SDK and call an external service deployed using [Node Red](http://nodered.org). A lot of this example was built using the [Amazon samples](http://github.com/amzn/alexa-skills-kit-js) as a template.
 
+I've been wanting to get into both Lambda and Alexa, so this was an excuse to see how it all worked.
+
 ## Concepts
 This project shows how to create a Lambda function for handling Alexa Skill requests that:
 
 - Communicates with an external webservice deployed using the NodeRed project
 - Handles a very simple interaction with Alexa that allows you to ask for info about a person by first name. Not much practical use but it's my first project using all three components for an end to end interaction.
+
+## Some Key Info
+- Once you're done with the Alexa Skill setup, the skill is deployed to any Alexa you own that's tied to the same Amazon ID you're using to create the Lambda and Alexa Skill. It's really convenient. Once you've saved the skill, you can immediately interact with it. Very slick.
+- The configuration of both the Skill and Lambda function are not super intuitive, which is somewhat typical for Amazon UI/UX. Takes some getting used to. I had the Alexa console open on one monitor and the Lambda console open on another while I was testing. Made it much easier to see how things flowed.
 
 ## Setup
 To run this example skill you need to do three things. The first is to deploy the function code in Lambda. The second is to configure the Alexa skill to use Lambda. The third is to deploy the Node Red flow somewhere where it can be accessed by Lambda
