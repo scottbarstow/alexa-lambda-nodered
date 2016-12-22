@@ -99,7 +99,7 @@ To run this example skill you need to do three things. The first is to deploy th
 1. npm install -g node-red on a publicly acccessible machine
 2. Copy the files in the node-red folder of this project to the host machine.
 3. Start node-red by typing node-red -s settings.json in the folder where you put the files. This will launch node-red with the flows.json as the flow file.
-4. This exposes a get webservice at http://<yourip>/message. You should be able to hit it in your browser and see the sample json returned.
+4. This exposes a get webservice at http://yourip/message. You should be able to hit it in your browser and see the sample json returned.
 
 ### Putting It All Together
 
