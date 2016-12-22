@@ -4,7 +4,7 @@ var http       = require('http')
   , AlexaSkill = require('./AlexaSkill');
   
 var getPersonInfo = function(person, callback){
-    http.get("http://107.170.66.63:1880/message", function(res){
+    http.get("http://yourip:1880/message", function(res){
         var body = "";
         res.on('data', function(data){
             body += data
