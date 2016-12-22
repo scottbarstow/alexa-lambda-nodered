@@ -34,7 +34,7 @@
         "type": "function",
         "z": "7bbc1ba9.1fd204",
         "name": "Set Payload",
-        "func": "msg.payload = {\n    \"name\": \"scott\",\n    \"height\": \"6 feet 4 inches\",\n    \"weight\": \"192 lbs\"\n};\nreturn msg;",
+        "func": "msg.payload = {\n    \"name\": \"scott\",\n    \"height\": \"6 feet 1 inches\",\n    \"weight\": \"176 lbs\"\n};\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 304.5,
