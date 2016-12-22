@@ -37,3 +37,136 @@ To run this example skill you need to do three things. The first is to deploy th
 7. You are now able to start testing your sample skill! You should be able to go to the [Echo webpage](http://echo.amazon.com/#skills) and see your skill enabled.
 8. In order to test it, try to say some of the Sample Utterances from the Examples section below.
 9. Your skill is now saved and once you are finished testing you can continue to publish your skill.
+10. You can test your skill by clicking the test button and pasting in the following Alexa event JSON sample. Note the only thing that really matters in this file is the **intent** section.
+
+```
+{
+  "session": {
+    "new": false,
+    "sessionId": "amzn1.echo-api.session.[unique-value-here]",
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.[unique-value-here]"
+    },
+    "application": {
+      "applicationId": "amzn1.ask.skill.[unique-value-here]"
+    }
+  },
+  "version": "1.0",
+  "request": {
+    "locale": "en-US",
+    "timestamp": "2016-10-27T21:06:28Z",
+    "type": "IntentRequest",
+    "requestId": "amzn1.echo-api.request.[unique-value-here]",
+    "intent": {
+      "slots": {
+          "person": {
+              "name": "person",
+              "value": "scott"
+          }
+      },
+      "name": "GetPersonInfoIntent"
+    }
+  },
+  "context": {
+    "AudioPlayer": {
+      "playerActivity": "IDLE"
+    },
+    "System": {
+      "device": {
+        "supportedInterfaces": {
+          "AudioPlayer": {}
+        }
+      },
+      "application": {
+        "applicationId": "amzn1.ask.skill.[unique-value-here]"
+      },
+      "user": {
+        "userId": "amzn1.ask.account.[unique-value-here]"
+      }
+    }
+  }
+}
+```
+
+### Node Red Setup
+1. npm install -g node-red on a publicly acccessible machine
+2. Copy the files in the node-red folder of this project to the host machine.
+3. Start node-red by typing node-red -s settings.json in the folder where you put the files. This will launch node-red with the flows.json as the flow file.
+4. This exposes a get webservice at http://<yourip>/message. You should be able to hit it in your browser and see the sample json returned.
+
+### Putting It All Together
+
+It took me a while to get all of this figured out, so I'm going to elaborate a bit on how all of the pieces fit together.
+
+When you say 'Alexa ask Person Info about Scott', Alexa parses your voice request and puts the value of the name requested (in my case 'scott') in the slot for the intent.
+
+If you look at the Utterance, I have one that says `about {person}`. So, Alexa says "Oh, you want to know about Scott", so it creates an event like the one above and puts the value of 'scott' in the person slot of the 'GetPersonInfoIntent'
+
+```
+"intent": {
+      "slots": {
+          "person": {
+              "name": "person",
+              "value": "scott"
+          }
+      },
+      "name": "GetPersonInfoIntent"
+```
+
+Then, in the lambda function, you'll see that I dig the value out of the intent using this code:
+
+```    
+var person = intent.slots.person.value;
+```
+
+I could do anything I want with this value. In the case of this example, I just use it in the response from Alexa, but I could easily pass it to an external service or whatever.
+
+The lambda function then makes a request to the NodeRed flow using this code:
+
+```
+PersonInfo.prototype.intentHandlers = {
+  GetPersonInfoIntent: function(intent, session, response){
+    handlePersonInfoRequest(intent, session, response);
+  },
+
+var handlePersonInfoRequest = function(intent, session, response){
+    var person = intent.slots.person.value;
+    console.log("Person is " + person);
+    getPersonInfo(person, function(data){
+        var name = data.name;
+        var weight = data.weight;
+        var height = data.height;
+        var cardText = "The person you asked about is " + name + ". He is " + height + " tall and weighs " + weight;
+        response.tellWithCard(cardText, "Person Info", cardText);
+    })
+}
+
+var getPersonInfo = function(person, callback){
+    http.get("http://yourip:1880/message", function(res){
+        var body = "";
+        res.on('data', function(data){
+            body += data
+        });
+        
+        res.on('end', function(){
+            var result = JSON.parse(body);
+            callback(result);
+            
+        });
+    }).on('error', function(e){
+        console.log(e);
+    })
+}
+```
+
+I tell the intent handler to handle the GetPersonInfoIntent, then it calls `handlePersonInfoRequest`, which then calls `getPersonInfo`, which calls my NodeRed flow.
+
+The NodeRed flow returns a really simple JSON payload that looks something like this:
+```
+{
+	"name":"scott",
+	"height":"6 feet 4 inches",
+	"weight":"192 lbs"
+}
+```
