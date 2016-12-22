@@ -63,7 +63,7 @@ PersonInfo.prototype.intentHandlers = {
   },
 
   HelpIntent: function(intent, session, response){
-    var speechOutput = 'Get info on anyone in the Barstow family';
+    var speechOutput = 'Get info on anyone in our database';
     response.ask(speechOutput);
   }
 };
